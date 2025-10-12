@@ -38,6 +38,22 @@ const serviceSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "User",
     },
-}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+}, {
+    toJSON: {
+        virtuals: true,
+        versionKey: false,
+    },
+    toObject: { virtuals: true },
+});
+serviceSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: "provider",
+        select: "-_id -role",
+    }).populate({
+        path: "category",
+        select: "-_id",
+    });
+    next();
+});
 const Service = mongoose_1.default.model("Service", serviceSchema);
 exports.default = Service;

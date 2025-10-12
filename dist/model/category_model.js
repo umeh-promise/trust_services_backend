@@ -8,12 +8,12 @@ const categorySchema = new mongoose_1.default.Schema({
     name: {
         type: String,
         required: [true, "Category name is required"],
+        unique: true,
     },
     imageUrl: {
         type: String,
-        required: [true, "category image is required"],
+        default: "https://images.emojiterra.com/google/noto-emoji/unicode-15/color/512px/1faae.png",
     },
-    photo: String,
     quantity: {
         type: Number,
         required: [true, "avaliable quanity is required"],

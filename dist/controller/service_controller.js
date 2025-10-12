@@ -7,12 +7,12 @@ exports.createOne = exports.getAll = void 0;
 const service_model_1 = __importDefault(require("../model/service_model"));
 const helper_1 = require("../utils/helper");
 exports.getAll = (0, helper_1.catchAsync)(async (req, res, next) => {
-    const service = await service_model_1.default.find();
+    const services = await service_model_1.default.find();
     res.status(helper_1.httpStatusCodes.statusOk).json({
         status: "success",
         data: {
-            data: service,
-            total: service.length,
+            services,
+            total: services.length,
         },
     });
 });
