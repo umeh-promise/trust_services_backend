@@ -1,4 +1,3 @@
-import { promisify } from "util";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Response, Request } from "express";
 
@@ -106,7 +105,7 @@ export const restrictTo =
       if (!roles.includes(req.user.role))
         return next(
           new AppError(
-            "You donot have permission to perform this action",
+            "You don't have permission to perform this action",
             httpStatusCodes.statusForbidden
           )
         );
@@ -114,3 +113,38 @@ export const restrictTo =
 
     next();
   };
+
+export const updatePassword = () =>
+  catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user._id).select("+password");
+
+    if (!user) {
+      return next(
+        new AppError("Unauthorized access", httpStatusCodes.statusUnauthorized)
+      );
+    }
+
+    if (!(await user.checkPassword(req.body.password, user.password!))) {
+      return next(
+        new AppError("Unauthorized access", httpStatusCodes.statusUnauthorized)
+      );
+    }
+
+    user.password = req.body.password;
+    await user.save();
+
+    createSendToken(user, httpStatusCodes.statusOk, res);
+  });
+
+export const forgotPassword = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(
+      new AppError(
+        "There's no user found with this email address",
+        httpStatusCodes.statusNotFound
+      )
+    );
+  }
+});
