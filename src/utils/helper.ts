@@ -21,6 +21,6 @@ export const httpStatusCodes = {
   statusBadRequest: 400,
   statusUnauthorized: 401,
   statusForbidden: 403,
-  statusNotFound: 403,
+  statusNotFound: 404,
   statusInternalServerError: 500,
 };
